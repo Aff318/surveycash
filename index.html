@@ -1,0 +1,355 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Rewards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+ 
+        .logo-container {
+            text-align: center;
+            padding: 0.5rem;
+            margin-top: 4rem;
+            margin-bottom: -1rem;
+        }
+ 
+        .cash-logo {
+            width: 240px;
+            height: auto;
+            margin: 0 auto;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+ 
+        body {
+            background: linear-gradient(to bottom, white, #f9fafb);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+ 
+        .alert {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: calc(100% - 2rem);
+            max-width: 20rem;
+            animation: slideDown 0.5s ease-out;
+            z-index: 50;
+            font-size: 0.875rem;
+        }
+ 
+        .alert-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+ 
+        .main-content {
+            width: 100%;
+            max-width: 24rem;
+            padding: 1rem;
+            margin: 0 auto;
+            padding-bottom: 8rem;
+        }
+ 
+        .timer {
+            background: #00CF31;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin: 1rem;
+            font-size: 1rem;
+            width: calc(100% - 2rem);
+            max-width: 24rem;
+        }
+ 
+        .card {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+            transition: transform 0.2s;
+            animation: fadeInUp 0.5s ease-out backwards;
+            cursor: pointer;
+        }
+ 
+        .card:hover {
+            transform: scale(1.01);
+        }
+ 
+        .card:active {
+            transform: scale(0.98);
+        }
+ 
+        .card h2 {
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+ 
+        .check-item {
+            background: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+ 
+        .check-circle {
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #00CF31;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+ 
+        .check-text {
+            flex: 1;
+        }
+ 
+        .check-title {
+            font-weight: 500;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+ 
+        .check-subtitle {
+            color: #00CF31;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+ 
+        .cta-button {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00CF31;
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            width: calc(100% - 2rem);
+            max-width: 24rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+            z-index: 40;
+            animation: buttonPulse 2s infinite;
+            -webkit-tap-highlight-color: transparent;
+        }
+ 
+        .cta-button:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+ 
+        .faq-item {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+        }
+ 
+        .faq-question {
+            color: #00CF31;
+            font-weight: 500;
+            font-size: 0.813rem;
+            margin-bottom: 0.25rem;
+        }
+ 
+        .faq-answer {
+            color: #4b5563;
+            font-size: 0.75rem;
+            line-height: 1.25rem;
+        }
+ 
+        #nameAlert {
+            display: none;
+        }
+ 
+        @keyframes buttonPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.02); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+ 
+        @keyframes slideDown {
+            from { transform: translate(-50%, -100%); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+ 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+        <img class="cash-logo" src="images/Untitled_design_-_2025-01-05T161314.png" alt="CashApp Logo">
+    </div>
+ 
+    <div id="nameAlert" class="alert">
+        <div class="alert-icon">💵</div>
+        <div><span class="name">Julian P.</span> just received $750!</div>
+    </div>
+ 
+    <div class="main-content">
+        <div class="timer">⏰ <span id="timer">28:45</span></div>
+       
+        <div class="card">
+            <h2>Quick Start Guide →</h2>
+            <div class="check-item">
+                <div class="check-circle">✓</div>
+                <div class="check-text">
+                    <div class="check-title">Complete 2-3 required deals</div>
+                    <div class="check-subtitle">Earn up to $750</div>
+                </div>
+            </div>
+            <div class="check-item">
+                <div class="check-circle">✓</div>
+                <div class="check-text">
+                    <div class="check-title">Provide a valid email address</div>
+                    <div class="check-subtitle">For instant notification</div>
+                </div>
+            </div>
+            <div class="check-item">
+                <div class="check-circle">✓</div>
+                <div class="check-text">
+                    <div class="check-title">Ensure you are 18 years or older</div>
+                    <div class="check-subtitle">Required</div>
+                </div>
+            </div>
+        </div>
+ 
+        <div class="card">
+            <h2>Common Questions →</h2>
+            <div class="faq-item">
+                <div class="faq-question">How long do the deals take?</div>
+                <div class="faq-answer">Quick 10-20 minute completion time per deal</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">What are deals?</div>
+                <div class="faq-answer">Simple tasks like app downloads, surveys, or trial subscriptions with specific reward goals</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">How many deals do I need?</div>
+                <div class="faq-answer">Complete as many as you want - rewards sent upon completion</div>
+            </div>
+        </div>
+    </div>
+ 
+    <button class="cta-button">
+        Start Earning Now →
+    </button>
+ 
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const NAMES = ['Ava R.','Ethan T.','Luna W.','Caleb R.','Aria K.','Julian P.','Piper S.','Gabriel L.'];
+    const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+ 
+    function handleClick() {
+        window.location.href = 'https://glstrck.com/aff_c?offer_id=74&aff_id=17873';
+    }
+ 
+    function updateTimer() {
+        const timer = document.getElementById('timer');
+        let [minutes, seconds] = timer.textContent.split(':').map(Number);
+       
+        if(seconds > 0) {
+            seconds--;
+        } else if(minutes > 0) {
+            minutes--;
+            seconds = 59;
+        }
+       
+        timer.textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    }
+ 
+    function showNameAlert() {
+        const alert = document.getElementById('nameAlert');
+        const nameSpan = alert.querySelector('.name');
+        const randomName = NAMES[Math.floor(Math.random() * NAMES.length)];
+        nameSpan.textContent = randomName;
+        alert.style.display = 'flex';
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 3000);
+    }
+ 
+    if (!isMobile) {
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.keyCode === 123 ||
+                (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+                (e.ctrlKey && e.shiftKey && e.keyCode === 74) ||
+                (e.ctrlKey && e.keyCode === 85)
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+ 
+        setInterval(function() {
+            const threshold = 160;
+            if (
+                window.outerWidth - window.innerWidth > threshold ||
+                window.outerHeight - window.innerHeight > threshold
+            ) {
+                document.body.innerHTML = '';
+                window.location.replace("about:blank");
+            }
+        }, 100);
+    }
+ 
+    document.querySelector('.cta-button').addEventListener('click', handleClick);
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', handleClick);
+    });
+ 
+    setInterval(updateTimer, 1000);
+    setInterval(showNameAlert, 5000);
+    setTimeout(showNameAlert, 2000);
+  });
+  </script>
+  
+  </body></html>
